@@ -40,6 +40,29 @@ export function icon(name: keyof typeof icons, cls = "ico"): HTMLSpanElement {
   return s;
 }
 
+const CONFETTI_COLORS = ["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)", "var(--t5)", "var(--t6)", "#ffffff"];
+
+/** Burst of confetti from (x, y) in percent of the container. Removes itself. */
+export function confetti(container: HTMLElement, count: number, x = 50, y = 50): void {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  const layer = h("div", { class: "confetti", attrs: { "aria-hidden": "true" } });
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 60 + Math.random() * 140;
+    const piece = h("i");
+    piece.style.setProperty("--x", `${x}%`);
+    piece.style.setProperty("--y", `${y}%`);
+    piece.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
+    piece.style.setProperty("--dy", `${Math.sin(angle) * dist + 60}px`);
+    piece.style.setProperty("--rot", `${Math.round(Math.random() * 720 - 360)}deg`);
+    piece.style.setProperty("--c", CONFETTI_COLORS[i % CONFETTI_COLORS.length]);
+    piece.style.animationDelay = `${Math.random() * 80}ms`;
+    layer.append(piece);
+  }
+  container.append(layer);
+  setTimeout(() => layer.remove(), 1300);
+}
+
 export function stars(n: number, of = 3): HTMLSpanElement {
   const wrap = h("span", { class: "stars", attrs: { "aria-label": `${n}/${of}` } });
   for (let i = 0; i < of; i++) wrap.append(icon("star", i < n ? "star on" : "star"));

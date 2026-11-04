@@ -6,12 +6,12 @@ const config: CapacitorConfig = {
   appId: "com.quantumtechnologies.cuadra",
   appName: "Cuadra",
   webDir: "dist",
-  backgroundColor: "#0c2124",
+  backgroundColor: "#1ec96b",
   android: {
-    backgroundColor: "#0c2124"
+    backgroundColor: "#1ec96b"
   },
   ios: {
-    backgroundColor: "#0c2124",
+    backgroundColor: "#1ec96b",
     contentInset: "never"
   }
 };

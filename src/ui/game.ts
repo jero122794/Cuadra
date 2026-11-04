@@ -9,7 +9,7 @@ import { fx } from "../services/feedback.ts";
 import {
   clearSession, getProgress, recordLevel, recordScore, saveSession
 } from "../services/progress.ts";
-import { button, h, icon, stars } from "./dom.ts";
+import { button, confetti, h, icon, stars } from "./dom.ts";
 
 export interface GameNav {
   home(): void;
@@ -120,6 +120,7 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
         if (rows.has(r) || cols.has(c)) cls += " will-clear";
         if (el.classList.contains("flash")) cls += " flash";
         if (el.classList.contains("spawn")) cls += " spawn";
+        if (el.classList.contains("placed")) cls += " placed";
         el.className = cls;
       }
   }
@@ -296,6 +297,17 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
   }
 
   function effects(ev: PlayEvents, _before: GameState) {
+    for (const [r, c] of ev.placed) {
+      const el = cells[r * size + c];
+      if (!game.grid[r][c]) continue;
+      el.classList.add("placed");
+      setTimeout(() => el.classList.remove("placed"), 300);
+    }
+    if (ev.cleared.length) {
+      const avgR = ev.cleared.reduce((a, x) => a + x.r, 0) / ev.cleared.length;
+      const avgC = ev.cleared.reduce((a, x) => a + x.c, 0) / ev.cleared.length;
+      confetti(boardWrap, 14 + ev.lines * 10, ((avgC + 0.5) / size) * 100, ((avgR + 0.5) / size) * 100);
+    }
     for (const { r, c, cell } of ev.cleared) {
       const el = cells[r * size + c];
       el.style.setProperty("--fc", cellColor(cell));
@@ -410,6 +422,7 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
       )
     );
     el.append(overlay);
+    if (game.status === "won" || game.status === "finished" || isBest) confetti(overlay, 70, 50, 35);
     (actions.querySelector("button") as HTMLButtonElement | null)?.focus();
   }
 
