@@ -165,9 +165,13 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
   }
 
   function sizeMini() {
+    // Fit the largest piece (5 tiles long) inside one slot, whether the tray is
+    // a row under the board (phones) or a column beside it (desktop).
     const { size: cs } = geometry();
-    const slotW = tray.clientWidth / 3 - 8;
-    const mini = Math.max(11, Math.min(cs * 0.56, (slotW - 12) / 5));
+    const slot = tray.querySelector(".slot")?.getBoundingClientRect();
+    const slotW = slot ? slot.width : tray.clientWidth / 3;
+    const slotH = slot && slot.height > 40 ? slot.height : Infinity;
+    const mini = Math.max(11, Math.min(cs * 0.62, (slotW - 20) / 5, (slotH - 20) / 5));
     tray.style.setProperty("--mini", `${mini}px`);
   }
 
