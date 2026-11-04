@@ -49,6 +49,16 @@ npm run levels   # regenera src/levels/levels.json
 npm test         # motor + los 30 niveles
 ```
 
+## Jugar sin instalar nada
+
+Abre **`docs/index.html`** con doble clic: es el juego completo en un solo archivo.
+
+El `index.html` de la raíz **no es el juego**: es la entrada de desarrollo de Vite y solo funciona con `npm run dev`. Abierto con doble clic se ve en blanco.
+
+Para tenerlo en internet gratis: en GitHub, **Settings → Pages → Branch: main, carpeta /docs → Save**. Queda en `https://jero122794.github.io/cuadra/`.
+
+Después de cambiar el código, regenera esa versión con `npm run build:play`.
+
 ## Desarrollo
 
 ```bash

@@ -12,7 +12,8 @@
     "levels": "node --experimental-strip-types scripts/generate-levels.ts",
     "cap:sync": "npm run build && npx cap sync",
     "android": "npm run cap:sync && npx cap open android",
-    "ios": "npm run cap:sync && npx cap open ios"
+    "ios": "npm run cap:sync && npx cap open ios",
+    "build:play": "npm run build && node -e \"require('fs').mkdirSync('docs',{recursive:true});require('fs').copyFileSync('dist/index.html','docs/index.html')\""
   },
   "devDependencies": {
     "@capacitor/cli": "7.4.2",
