@@ -109,5 +109,6 @@ Para portales web: el adaptador `src/services/ads/portal-ads.ts` sigue la forma 
 ## Tipografías
 
 - **Matcha World** (Khurasan) para títulos, puntajes y botones grandes. Gratis para uso personal y comercial (`src/fonts/MATCHA-WORLD-LICENSE.txt`). La versión gratuita no trae tildes, Ñ, ¿ ni ¡: `scripts/build-display-font.py` las construye con piezas de la misma fuente (acento grave invertido, su ~, su punto y ? ! girados) y genera `src/fonts/matcha-world-es.ttf`.
-- **Rubik** para el texto pequeño.
+- **Bricolage Grotesque** para el texto (licencia libre OFL 1.1, apta para uso comercial).
 - **Stay With Me** (Origin Fonts) **no está incluida**: su licencia gratuita es solo para uso personal y el juego tiene anuncios. Para usarla hay que comprar la licencia comercial en originfonts.com.
+- **Coolvetica** (Typodermic) **tampoco está incluida**: su licencia de escritorio prohíbe incluirla en webs, apps y juegos. Sí sirve para el logo y las imágenes de la tienda.

@@ -1,7 +1,7 @@
 // Fonts ship inside the app so they work offline. The display face is in styles.css.
-import "@fontsource/rubik/latin-400.css";
-import "@fontsource/rubik/latin-500.css";
-import "@fontsource/rubik/latin-700.css";
+import "@fontsource/bricolage-grotesque/latin-400.css";
+import "@fontsource/bricolage-grotesque/latin-500.css";
+import "@fontsource/bricolage-grotesque/latin-700.css";
 import "./styles.css";
 
 import { App } from "@capacitor/app";
