@@ -40,7 +40,72 @@ export function icon(name: keyof typeof icons, cls = "ico"): HTMLSpanElement {
   return s;
 }
 
-const CONFETTI_COLORS = ["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)", "var(--t5)", "var(--t6)", "#ffffff"];
+// ---------- Shared UI states ----------
+
+export function spinner(cls = "spinner"): HTMLSpanElement {
+  return h("span", { class: cls, attrs: { "aria-hidden": "true" } });
+}
+
+/**
+ * Puts a button into its busy state while `work` runs: disabled, spinner,
+ * aria-busy, and a label saying what is happening. Restores it afterwards.
+ */
+export async function withBusy<T>(btn: HTMLButtonElement, label: string, work: () => Promise<T>): Promise<T> {
+  const before = [...btn.childNodes];
+  btn.disabled = true;
+  btn.setAttribute("aria-busy", "true");
+  btn.replaceChildren(spinner(), h("span", { text: label }));
+  try {
+    return await work();
+  } finally {
+    btn.disabled = false;
+    btn.removeAttribute("aria-busy");
+    btn.replaceChildren(...before);
+  }
+}
+
+/** Full-screen loading state for work that blocks the whole screen (ads). */
+export function showLoader(label: string): () => void {
+  const el = h("div", { class: "loader-screen", attrs: { role: "status", "aria-live": "polite" } },
+    spinner("spinner big"), h("span", { text: label }));
+  document.body.append(el);
+  return () => el.remove();
+}
+
+let toastRegion: HTMLElement | null = null;
+let toastTimer = 0;
+
+/** One short message at a time, announced to screen readers. */
+export function toast(message: string, kind: "info" | "success" | "error" = "info"): void {
+  if (!toastRegion) {
+    toastRegion = h("div", { class: "toast-region", attrs: { role: "status", "aria-live": "polite" } });
+    document.body.append(toastRegion);
+  }
+  clearTimeout(toastTimer);
+  toastRegion.replaceChildren(h("div", { class: `toast ${kind}`, text: message }));
+  toastTimer = window.setTimeout(() => toastRegion?.replaceChildren(), 2600);
+}
+
+/** Keeps Tab inside `container` (dialogs). Returns a cleanup function. */
+export function trapFocus(container: HTMLElement): () => void {
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key !== "Tab") return;
+    const items = [...container.querySelectorAll<HTMLElement>("button:not([disabled]), input, [tabindex]:not([tabindex='-1'])")];
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  document.addEventListener("keydown", onKey);
+  return () => document.removeEventListener("keydown", onKey);
+}
+
+/** Text only screen readers hear. */
+export function liveRegion(): HTMLElement {
+  return h("div", { class: "sr-only", attrs: { "aria-live": "polite", "aria-atomic": "true" } });
+}
+
+const CONFETTI_COLORS =["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)", "var(--t5)", "var(--t6)", "#ffffff"];
 
 /** Burst of confetti from (x, y) in percent of the container. Removes itself. */
 export function confetti(container: HTMLElement, count: number, x = 50, y = 50): void {

@@ -2,13 +2,31 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1ec96b" />
     <meta name="description" content="Cuadra: rompecabezas de bloques. Encaja las piezas, completa filas y columnas, supera 30 niveles y los modos extremos." />
     <title>Cuadra</title>
+    <style>
+      /* Boot screen: painted before the game's script runs, so a slow phone
+         never shows a blank page. main.ts replaces it on start. */
+      html, body { height: 100%; margin: 0; background: #1ec96b; }
+      .boot { min-height: 100%; display: grid; place-content: center; justify-items: center; gap: 18px; font: 700 15px system-ui, sans-serif; color: #053d21; }
+      .boot-mark { display: grid; grid-template-columns: repeat(2, 22px); gap: 5px; }
+      .boot-mark i { width: 22px; height: 22px; border-radius: 6px; background: #2b9bff; animation: boot 900ms ease-in-out infinite; }
+      .boot-mark i:nth-child(2) { background: #ff4fa8; animation-delay: 150ms; }
+      .boot-mark i:nth-child(3) { background: #ffd43b; animation-delay: 450ms; }
+      .boot-mark i:nth-child(4) { background: #a25cff; animation-delay: 300ms; }
+      @keyframes boot { 50% { transform: scale(0.6); opacity: 0.5; } }
+      @media (prefers-reduced-motion: reduce) { .boot-mark i { animation: none; } }
+    </style>
   </head>
   <body>
-    <main id="app" class="app"></main>
+    <main id="app" class="app">
+      <div class="boot" role="status" aria-live="polite">
+        <span class="boot-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Cargando Cuadra…</span>
+      </div>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

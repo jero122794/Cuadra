@@ -27,13 +27,18 @@ function countdown(seconds: number): Promise<void> {
   });
 }
 
+/** Real networks take a moment to fetch an ad; simulate it so the loading state is visible. */
+const fakeFetch = () => new Promise(resolve => setTimeout(resolve, 700));
+
 export class TestAds implements AdProvider {
   readonly name = "test";
   async init() {}
   async interstitial() {
+    await fakeFetch();
     await countdown(2);
   }
   async rewarded() {
+    await fakeFetch();
     await countdown(3);
     return true;
   }
