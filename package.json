@@ -29,7 +29,6 @@
     "@capacitor/core": "7.4.2",
     "@capacitor/haptics": "^7.0.5",
     "@capacitor/ios": "7.4.2",
-    "@fontsource/bungee": "5.1.0",
     "@fontsource/rubik": "5.1.0"
   }
 }

@@ -105,3 +105,9 @@ Para portales web: el adaptador `src/services/ads/portal-ads.ts` sigue la forma 
 - Icono y pantalla de carga propios (`npx @capacitor/assets generate` a partir de un icono de 1024×1024).
 - Política de privacidad publicada en una URL (la piden ambas tiendas).
 - Probar los niveles con jugadores reales y ajustar la dificultad.
+
+## Tipografías
+
+- **Matcha World** (Khurasan) para títulos, puntajes y botones grandes. Gratis para uso personal y comercial (`src/fonts/MATCHA-WORLD-LICENSE.txt`). La versión gratuita no trae tildes, Ñ, ¿ ni ¡: `scripts/build-display-font.py` las construye con piezas de la misma fuente (acento grave invertido, su ~, su punto y ? ! girados) y genera `src/fonts/matcha-world-es.ttf`.
+- **Rubik** para el texto pequeño.
+- **Stay With Me** (Origin Fonts) **no está incluida**: su licencia gratuita es solo para uso personal y el juego tiene anuncios. Para usarla hay que comprar la licencia comercial en originfonts.com.

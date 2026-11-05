@@ -66,7 +66,7 @@ export function homeScreen(nav: Nav): HTMLElement {
     );
   } else {
     hero.append(
-      button(h("span", { class: "hero-label" }, icon("play"), t("play")), () => nav.play("classic"), "btn hero-btn"),
+      button(h("span", { class: "hero-label big" }, icon("play"), t("play")), () => nav.play("classic"), "btn hero-btn"),
       h("p", { class: "hero-sub", text: best ? t("classicBest", { n: best }) : t("classic") })
     );
   }
