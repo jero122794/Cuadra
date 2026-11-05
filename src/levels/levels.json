@@ -4,9 +4,9 @@
   "seed": 1121655621,
   "goal": {
    "type": "score",
-   "target": 60
+   "target": 70
   },
-  "moves": 17,
+  "moves": 23,
   "pool": "easy"
  },
  {
@@ -14,9 +14,9 @@
   "seed": 335648964,
   "goal": {
    "type": "score",
-   "target": 100
+   "target": 90
   },
-  "moves": 24,
+  "moves": 22,
   "pool": "easy"
  },
  {
@@ -34,9 +34,9 @@
   "seed": 3776745938,
   "goal": {
    "type": "score",
-   "target": 80
+   "target": 90
   },
-  "moves": 19,
+  "moves": 24,
   "pool": "easy"
  },
  {
@@ -44,9 +44,9 @@
   "seed": 3996832601,
   "goal": {
    "type": "score",
-   "target": 100
+   "target": 110
   },
-  "moves": 23,
+  "moves": 22,
   "pool": "easy"
  },
  {
@@ -54,9 +54,9 @@
   "seed": 3205603064,
   "goal": {
    "type": "lines",
-   "target": 3
+   "target": 4
   },
-  "moves": 17,
+  "moves": 20,
   "pool": "easy"
  },
  {
@@ -64,9 +64,9 @@
   "seed": 1558322087,
   "goal": {
    "type": "lines",
-   "target": 4
+   "target": 5
   },
-  "moves": 21,
+  "moves": 23,
   "pool": "easy"
  },
  {
@@ -76,7 +76,7 @@
    "type": "lines",
    "target": 4
   },
-  "moves": 26,
+  "moves": 19,
   "pool": "easy"
  },
  {
@@ -84,9 +84,9 @@
   "seed": 971613741,
   "goal": {
    "type": "lines",
-   "target": 3
+   "target": 6
   },
-  "moves": 16,
+  "moves": 27,
   "pool": "normal"
  },
  {
@@ -94,9 +94,9 @@
   "seed": 2129120309,
   "goal": {
    "type": "lines",
-   "target": 7
+   "target": 6
   },
-  "moves": 26,
+  "moves": 25,
   "pool": "normal"
  },
  {
@@ -104,9 +104,9 @@
   "seed": 4066911470,
   "goal": {
    "type": "score",
-   "target": 70
+   "target": 220
   },
-  "moves": 13,
+  "moves": 31,
   "pool": "normal",
   "layout": [
    "........",
@@ -124,9 +124,9 @@
   "seed": 1296038339,
   "goal": {
    "type": "lines",
-   "target": 7
+   "target": 9
   },
-  "moves": 17,
+  "moves": 26,
   "pool": "normal",
   "layout": [
    "........",
@@ -144,9 +144,9 @@
   "seed": 3480203124,
   "goal": {
    "type": "score",
-   "target": 170
+   "target": 230
   },
-  "moves": 28,
+  "moves": 27,
   "pool": "normal",
   "layout": [
    "........",
@@ -164,9 +164,9 @@
   "seed": 709329993,
   "goal": {
    "type": "lines",
-   "target": 9
+   "target": 6
   },
-  "moves": 27,
+  "moves": 21,
   "pool": "normal",
   "layout": [
    "........",
@@ -184,9 +184,9 @@
   "seed": 2647121154,
   "goal": {
    "type": "score",
-   "target": 110
+   "target": 140
   },
-  "moves": 15,
+  "moves": 16,
   "pool": "normal",
   "layout": [
    "........",
@@ -205,7 +205,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 18,
+  "moves": 11,
   "pool": "normal",
   "layout": [
    "........",
@@ -224,7 +224,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 15,
+  "moves": 5,
   "pool": "normal",
   "layout": [
    "........",
@@ -262,7 +262,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 10,
+  "moves": 13,
   "pool": "normal",
   "layout": [
    "........",
@@ -281,7 +281,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 15,
+  "moves": 10,
   "pool": "normal",
   "layout": [
    "....g...",
@@ -296,21 +296,21 @@
  },
  {
   "id": 21,
-  "seed": 3912562529,
+  "seed": 3979673005,
   "goal": {
    "type": "gems"
   },
-  "moves": 16,
+  "moves": 24,
   "pool": "normal",
   "layout": [
-   ".......g",
    "........",
+   "...g....",
    "........",
-   "g...g...",
-   "..1.3g.1",
-   "..5.4..5",
-   "..561.14",
-   "5.161131"
+   "......gg",
+   ".3...5.6",
+   "35g.11.2",
+   "212.4154",
+   "212.2511"
   ]
  },
  {
@@ -319,7 +319,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 14,
+  "moves": 22,
   "pool": "normal",
   "layout": [
    "........",
@@ -337,9 +337,9 @@
   "seed": 3146591035,
   "goal": {
    "type": "lines",
-   "target": 5
+   "target": 14
   },
-  "moves": 12,
+  "moves": 34,
   "pool": "normal",
   "layout": [
    ".....s..",
@@ -357,9 +357,9 @@
   "seed": 2355361498,
   "goal": {
    "type": "lines",
-   "target": 12
+   "target": 11
   },
-  "moves": 30,
+  "moves": 31,
   "pool": "normal",
   "layout": [
    "........",
@@ -377,9 +377,9 @@
   "seed": 2575448161,
   "goal": {
    "type": "lines",
-   "target": 2
+   "target": 6
   },
-  "moves": 7,
+  "moves": 13,
   "pool": "hard",
   "layout": [
    "......s.",
@@ -397,9 +397,9 @@
   "seed": 3379201408,
   "goal": {
    "type": "lines",
-   "target": 2
+   "target": 8
   },
-  "moves": 6,
+  "moves": 16,
   "pool": "hard",
   "layout": [
    "........",
@@ -417,9 +417,9 @@
   "seed": 1721577839,
   "goal": {
    "type": "lines",
-   "target": 11
+   "target": 9
   },
-  "moves": 25,
+  "moves": 17,
   "pool": "hard",
   "layout": [
    "..s.....",
@@ -434,21 +434,21 @@
  },
  {
   "id": 28,
-  "seed": 3926405841,
+  "seed": 3909628222,
   "goal": {
    "type": "gems"
   },
-  "moves": 13,
+  "moves": 14,
   "pool": "hard",
   "layout": [
-   "......gg",
    "........",
-   ".....s..",
-   "..g...g.",
-   ".21..1..",
-   ".14..1.1",
-   "s54.41.6",
-   "261.4122"
+   ".s...g..",
+   "....g...",
+   ".g.....g",
+   "..56...1",
+   "..24.s.5",
+   ".635..43",
+   ".6451664"
   ]
  },
  {
@@ -457,7 +457,7 @@
   "goal": {
    "type": "gems"
   },
-  "moves": 25,
+  "moves": 20,
   "pool": "hard",
   "layout": [
    ".g..g...",
@@ -472,21 +472,21 @@
  },
  {
   "id": 30,
-  "seed": 982222474,
+  "seed": 965444855,
   "goal": {
    "type": "gems"
   },
-  "moves": 16,
+  "moves": 14,
   "pool": "hard",
   "layout": [
-   "..g.....",
-   "..g..s..",
+   ".g.....g",
    "........",
-   "....g...",
-   "1g6..g4.",
-   "536...2s",
-   "2155..2g",
-   "11152.1."
+   ".s...gg.",
+   "........",
+   ".15.6...",
+   "s61.5g6.",
+   "g44.2663",
+   ".1162412"
   ]
  }
 ]

@@ -1,7 +1,7 @@
 // Pure game rules. No DOM, no timers, no randomness outside the seeded RNG
 // streams stored in the state. Every function returns a new state.
 import { Rng } from "./rng.ts";
-import { SINGLE, poolTable } from "./shapes.ts";
+import { SINGLE, orientations, poolTable, rotateShape } from "./shapes.ts";
 import type {
   Cell, GameState, Goal, Grid, Piece, PlayEvents, PoolName, Rules, Shape
 } from "./types.ts";
@@ -52,8 +52,22 @@ export function fitsAnywhere(g: Grid, shape: Shape): boolean {
   return false;
 }
 
+/** True if the piece fits somewhere in any of its 90° orientations. */
+export function fitsWithRotation(g: Grid, shape: Shape): boolean {
+  return orientations(shape).some(o => fitsAnywhere(g, o));
+}
+
 export function hasMove(state: GameState): boolean {
-  return state.tray.some(p => p && fitsAnywhere(state.grid, p.shape));
+  return state.tray.some(p => p && fitsWithRotation(state.grid, p.shape));
+}
+
+/** Rotate tray piece `idx` 90° clockwise. Free: it does not count as a move. */
+export function rotatePiece(s: GameState, idx: number): GameState {
+  const p = s.tray[idx];
+  if (s.status !== "playing" || !p) return s;
+  const tray = s.tray.slice();
+  tray[idx] = { ...p, shape: rotateShape(p.shape) };
+  return { ...s, tray };
 }
 
 /** Board as it would look with the piece placed (for the drag preview). */
@@ -92,7 +106,7 @@ function drawPiece(rng: Rng, pool: PoolName): Piece {
  */
 export function dealTray(g: Grid, rng: Rng, pool: PoolName): Piece[] {
   const tray = [drawPiece(rng, pool), drawPiece(rng, pool), drawPiece(rng, pool)];
-  if (!tray.some(p => fitsAnywhere(g, p.shape))) tray[0] = { shape: SINGLE, color: tray[0].color };
+  if (!tray.some(p => fitsWithRotation(g, p.shape))) tray[0] = { shape: SINGLE, color: tray[0].color };
   return tray;
 }
 

@@ -13,6 +13,8 @@ Rompecabezas de bloques para **web, Android e iOS** desde una sola base de códi
 | **Bomba** (extremo) | Cada 7 jugadas aparece una bomba con contador de 6 jugadas; si llega a cero, pierdes. Se desbloquea al superar el nivel 20. |
 | **Contrarreloj** (extremo) | 10 segundos por jugada y piezas grandes. Se desbloquea al superar el nivel 30. |
 
+Piezas: 30 tipos (incluye pentominós como la cruz, la U o la W, y piezas diagonales que se tocan solo por la esquina). Cualquier pieza se puede girar 90° con el botón ↻ o la tecla R; girar es gratis y no cuenta como jugada. Una pieza solo se considera sin espacio si no cabe en ninguna orientación.
+
 Puntuación: 1 punto por casilla, 10 / 40 / 90 por limpiar 1 / 2 / 3 líneas, bonus por combo, +15 por gema, +20 por bomba desactivada y +100 por dejar el tablero vacío.
 
 ## Arquitectura

@@ -3,8 +3,8 @@
 //
 // Placing without dragging is required by WCAG 2.2 SC 2.5.7 (Dragging
 // Movements) and SC 2.1.1 (Keyboard); it is also easier on small phones.
-import { canContinue, canPlace, fitsAnywhere, fullLines, hasMove, play, placeOnPreview, revive, starsFor, timeout } from "../core/engine.ts";
-import { shapeSize } from "../core/shapes.ts";
+import { canContinue, canPlace, fitsAnywhere, fitsWithRotation, fullLines, hasMove, play, placeOnPreview, revive, rotatePiece, starsFor, timeout } from "../core/engine.ts";
+import { canRotate, shapeSize } from "../core/shapes.ts";
 import type { Cell, GameState, Piece, PlayEvents } from "../core/types.ts";
 import { t } from "../i18n.ts";
 import { DAILY_MOVES, LEVELS, todayKey, type ModeId } from "../modes/modes.ts";
@@ -181,10 +181,16 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
     if (selected === null) {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        const first = game.tray.findIndex(p => p && fitsAnywhere(game.grid, p.shape));
+        const first = game.tray.findIndex(p => p && fitsWithRotation(game.grid, p.shape));
         if (first >= 0) select(first, true);
         else toast(t("selectFirst"));
       }
+      return;
+    }
+    if (e.key === "r" || e.key === "R") {
+      e.preventDefault();
+      rotate(selected, false);
+      announceCursor();
       return;
     }
     const p = game.tray[selected]!;
@@ -205,6 +211,19 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
       (tray.querySelector(`[data-idx="${idx}"]`) as HTMLElement | null)?.focus();
     }
   });
+
+  // ---------- Rotation (free, 90° clockwise) ----------
+  function rotate(idx: number, announce = true) {
+    const p = game.tray[idx];
+    if (game.status !== "playing" || !p || !canRotate(p.shape)) return;
+    game = rotatePiece(game, idx);
+    if (selected === idx) cursor = clampCursor(cursor.r, cursor.c, game.tray[idx]!);
+    fx.tick();
+    saveSession({ mode, levelId, state: game });
+    renderTray(idx);
+    renderBoard(previewFor());
+    if (announce) announcer.textContent = t("rotated", { i: idx + 1 });
+  }
 
   // ---------- Rendering ----------
   function renderHud() {
@@ -283,21 +302,25 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
     return node;
   }
 
-  function renderTray() {
-    const hadFocus = tray.contains(document.activeElement) ? (document.activeElement as HTMLElement).dataset.idx : undefined;
+  function renderTray(spun?: number) {
+    const hadFocus = tray.contains(document.activeElement) ? (document.activeElement as HTMLElement) : null;
+    const focusKey = hadFocus ? (hadFocus.dataset.rotate !== undefined ? `r${hadFocus.dataset.rotate}` : `p${hadFocus.dataset.idx}`) : null;
     tray.innerHTML = "";
     game.tray.forEach((p, idx) => {
       const slot = h("div", { class: "slot" + (selected === idx ? " selected" : "") });
       if (p) {
         const node = pieceNode(p, "var(--mini)", "3px", "button") as HTMLButtonElement;
         node.dataset.idx = String(idx);
-        const fits = game.status === "playing" && fitsAnywhere(game.grid, p.shape);
+        const playing = game.status === "playing";
+        const fitsNow = playing && fitsAnywhere(game.grid, p.shape);
+        const fits = playing && (fitsNow || fitsWithRotation(game.grid, p.shape));
         let label = t("pieceLabel", { i: idx + 1, n: p.shape.length });
         if (!fits) {
           node.classList.add("dead");
           node.setAttribute("aria-disabled", "true");
           label += `, ${t("pieceNoFit")}`;
         }
+        if (spun === idx) node.classList.add("spun");
         node.setAttribute("aria-label", label);
         node.setAttribute("aria-pressed", String(selected === idx));
         node.addEventListener("pointerdown", onPiecePointerDown);
@@ -305,13 +328,27 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
           if ((e.key === "Enter" || e.key === " ") && fits) {
             e.preventDefault();
             select(idx, true);
+          } else if (e.key === "r" || e.key === "R") {
+            e.preventDefault();
+            rotate(idx);
           }
         });
         slot.append(node);
+        if (playing && canRotate(p.shape)) {
+          // Highlight the button when only a turned version of the piece fits.
+          const rot = button(icon("rotate"), () => rotate(idx), "rotate-btn" + (fits && !fitsNow ? " suggest" : ""),
+            { "aria-label": t("rotateLabel", { i: idx + 1 }) });
+          rot.dataset.rotate = String(idx);
+          rot.addEventListener("pointerdown", e => e.stopPropagation());
+          slot.append(rot);
+        }
       }
       tray.append(slot);
     });
-    if (hadFocus !== undefined) (tray.querySelector(`[data-idx="${hadFocus}"]`) as HTMLElement | null)?.focus();
+    if (focusKey) {
+      const sel = focusKey[0] === "r" ? `[data-rotate="${focusKey.slice(1)}"]` : `[data-idx="${focusKey.slice(1)}"]`;
+      (tray.querySelector(sel) as HTMLElement | null)?.focus();
+    }
   }
 
   function geometry() {
@@ -327,7 +364,9 @@ export function gameScreen(initial: GameState, mode: ModeId, levelId: number | u
     const slot = tray.querySelector(".slot")?.getBoundingClientRect();
     const slotW = slot ? slot.width : tray.clientWidth / 3;
     const slotH = slot && slot.height > 40 ? slot.height : Infinity;
-    const mini = Math.max(11, Math.min(cs * 0.62, (slotW - 20) / 5, (slotH - 20) / 5));
+    // A 3x3 piece, centred, must stay clear of the 29px rotate button in the slot's corner.
+    const corner = (Math.min(slotW, slot ? slot.height : slotW) - 58 - 6) / 3;
+    const mini = Math.max(11, Math.min(cs * 0.62, (slotW - 20) / 5, (slotH - 20) / 5, corner));
     tray.style.setProperty("--mini", `${mini}px`);
   }
 

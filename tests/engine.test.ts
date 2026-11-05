@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  canPlace, canContinue, dealTray, emptyGrid, fitsAnywhere, fullLines, lineScore, newGame, parseLayout,
-  play, revive, starsFor, timeout
+  canPlace, canContinue, dealTray, emptyGrid, fitsAnywhere, fitsWithRotation, fullLines, hasMove, lineScore, newGame, parseLayout,
+  play, revive, rotatePiece, starsFor, timeout
 } from "../src/core/engine.ts";
 import { Rng, hashSeed } from "../src/core/rng.ts";
-import { SINGLE } from "../src/core/shapes.ts";
-import type { GameState, Piece } from "../src/core/types.ts";
+import { SHAPES, SINGLE, orientations, rotateShape } from "../src/core/shapes.ts";
+import type { GameState, Piece, Shape } from "../src/core/types.ts";
 
 const single = (color = 1): Piece => ({ shape: SINGLE, color });
 
@@ -132,7 +132,57 @@ describe("game flow", () => {
     for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (!(r === 4 && c === 4)) g[r][c] = { kind: "stone", color: 0, hp: 2 };
     for (let seed = 1; seed <= 50; seed++) {
       const tray = dealTray(g, new Rng(seed), "hard");
-      expect(tray.some(p => fitsAnywhere(g, p.shape))).toBe(true);
+      expect(tray.some(p => fitsWithRotation(g, p.shape))).toBe(true);
     }
+  });
+});
+
+describe("pieces and rotation", () => {
+  it("normalises every orientation and has no duplicates", () => {
+    const keys = SHAPES.map(s => s.map(([r, c]) => `${r},${c}`).join(";"));
+    expect(new Set(keys).size).toBe(SHAPES.length);
+    for (const s of SHAPES) {
+      expect(Math.min(...s.map(([r]) => r))).toBe(0);
+      expect(Math.min(...s.map(([, c]) => c))).toBe(0);
+    }
+  });
+
+  it("rotates 90° clockwise and returns after four turns", () => {
+    const l: Shape = [[0, 0], [1, 0], [2, 0], [2, 1]];
+    expect(rotateShape(l)).toEqual([[0, 0], [0, 1], [0, 2], [1, 0]]);
+    expect(rotateShape(rotateShape(rotateShape(rotateShape(l))))).toEqual(l);
+  });
+
+  it("knows which pieces can turn", () => {
+    expect(orientations([[0, 0]])).toHaveLength(1);
+    expect(orientations([[0, 0], [0, 1], [1, 0], [1, 1]])).toHaveLength(1);
+    expect(orientations([[0, 1], [1, 0], [1, 1], [1, 2], [2, 1]])).toHaveLength(1);
+    expect(orientations([[0, 0], [1, 1]])).toHaveLength(2);
+    expect(orientations([[0, 0], [1, 0], [2, 0], [2, 1]])).toHaveLength(4);
+  });
+
+  it("rotating a tray piece is free and keeps the colour", () => {
+    let s = newGame({ seed: 9, goal: { type: "endless" }, rules: { pool: "normal" } });
+    s = { ...s, tray: [{ shape: [[0, 0], [0, 1], [0, 2]], color: 4 }, null, null] };
+    const r = rotatePiece(s, 0);
+    expect(r.tray[0]).toEqual({ shape: [[0, 0], [1, 0], [2, 0]], color: 4 });
+    expect(r.moves).toBe(s.moves);
+  });
+
+  it("counts a piece as playable when only a rotation fits", () => {
+    // One free column: a horizontal bar fits only after turning it.
+    const g = emptyGrid(8);
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (c !== 4) g[r][c] = { kind: "stone", color: 0, hp: 2 };
+    const bar: Shape = [[0, 0], [0, 1], [0, 2]];
+    expect(fitsAnywhere(g, bar)).toBe(false);
+    expect(fitsWithRotation(g, bar)).toBe(true);
+    const s = { ...newGame({ seed: 1, goal: { type: "endless" }, rules: { pool: "normal" }, preset: g }), tray: [{ shape: bar, color: 1 }, null, null] };
+    expect(hasMove(s)).toBe(true);
+  });
+
+  it("diagonal pieces place on corner-touching cells", () => {
+    const g = emptyGrid(8);
+    g[0][1] = { kind: "tile", color: 1 };
+    expect(canPlace(g, [[0, 0], [1, 1]], 0, 0)).toBe(true);
   });
 });

@@ -1,7 +1,8 @@
 // Greedy bot used to calibrate levels and to prove in tests that every level
 // can be won. It is not used during play.
 import { canPlace, play } from "./engine.ts";
-import type { GameState, Grid } from "./types.ts";
+import { orientations } from "./shapes.ts";
+import type { GameState, Grid, Shape } from "./types.ts";
 
 function holes(g: Grid): number {
   const n = g.length;
@@ -48,18 +49,26 @@ export function evaluate(next: GameState, gained: number, lines: number, gems: n
   return v;
 }
 
-export function bestMove(s: GameState): { idx: number; r: number; c: number } | null {
-  let best: { idx: number; r: number; c: number } | null = null;
+export interface BotMove { idx: number; shape: Shape; r: number; c: number }
+
+/** Best single move, trying every orientation of every tray piece (rotation is free). */
+export function bestMove(s: GameState, rotate = true): BotMove | null {
+  let best: BotMove | null = null;
   let bestValue = -Infinity;
   s.tray.forEach((p, idx) => {
     if (!p) return;
-    for (let r = 0; r < s.size; r++)
-      for (let c = 0; c < s.size; c++) {
-        if (!canPlace(s.grid, p.shape, r, c)) continue;
-        const { state, events } = play(s, idx, r, c);
-        const v = evaluate(state, events.gained, events.lines, events.gemsBroken, events.bombsDefused);
-        if (v > bestValue) { bestValue = v; best = { idx, r, c }; }
-      }
+    for (const shape of rotate ? orientations(p.shape) : [p.shape]) {
+      const tray = s.tray.slice();
+      tray[idx] = { ...p, shape };
+      const turned = { ...s, tray };
+      for (let r = 0; r < s.size; r++)
+        for (let c = 0; c < s.size; c++) {
+          if (!canPlace(s.grid, shape, r, c)) continue;
+          const { state, events } = play(turned, idx, r, c);
+          const v = evaluate(state, events.gained, events.lines, events.gemsBroken, events.bombsDefused);
+          if (v > bestValue) { bestValue = v; best = { idx, shape, r, c }; }
+        }
+    }
   });
   return best;
 }
@@ -70,7 +79,9 @@ export function autoplay(s: GameState, maxMoves = 400): GameState {
   for (let i = 0; i < maxMoves && state.status === "playing"; i++) {
     const m = bestMove(state);
     if (!m) break;
-    state = play(state, m.idx, m.r, m.c).state;
+    const tray = state.tray.slice();
+    tray[m.idx] = { ...tray[m.idx]!, shape: m.shape };
+    state = play({ ...state, tray }, m.idx, m.r, m.c).state;
   }
   return state;
 }
