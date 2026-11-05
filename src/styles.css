@@ -29,6 +29,7 @@
   --stone: #9aa39e;
   --bomb: #2a1f33;
   --ring: var(--ink);
+  --lock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
 
   /* type */
   --display: "Bungee", "Arial Black", Impact, sans-serif;
@@ -246,7 +247,8 @@ button { font: inherit; color: inherit; }
   font-size: var(--fs-xl);
   letter-spacing: 0.02em;
 }
-.hero-label { display: inline-flex; align-items: center; gap: var(--space-3); }
+.hero-btn { padding: 0 var(--space-4); }
+.hero-label { display: inline-flex; align-items: center; gap: var(--space-3); white-space: nowrap; font-size: clamp(17px, 5.6vw, 28px); }
 .hero-btn .ico { width: 28px; height: 28px; }
 .hero-sub { margin: 0; text-align: center; font-weight: 500; font-size: var(--fs-sm); }
 .section-label {
@@ -258,7 +260,30 @@ button { font: inherit; color: inherit; }
 
 .tile-grid { display: grid; gap: var(--space-3); }
 .tile-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.tile-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tile-grid.three { grid-template-columns: 1fr; gap: var(--space-2); }
+@media (max-width: 519px) {
+  .tile-grid.three .tile-btn.compact {
+    min-height: var(--control-h);
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+  }
+  .tile-btn.compact .tile-top { width: auto; margin: 0; order: 0; }
+  .tile-btn.compact .tile-top .ico { display: none; }
+  .tile-btn.compact .tile-title { flex: 1; min-width: 0; }
+  .tile-btn.compact .tile-meta { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .tile-btn.compact.locked .tile-meta::before {
+    content: "";
+    width: 14px; height: 14px;
+    background: currentColor;
+    -webkit-mask: var(--lock) center / contain no-repeat;
+    mask: var(--lock) center / contain no-repeat;
+  }
+}
+@media (min-width: 520px) {
+  .tile-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+}
 .tile-btn {
   appearance: none;
   border: 0;
@@ -284,8 +309,8 @@ button { font: inherit; color: inherit; }
   background: var(--accent);
   box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.3), inset 0 -5px 0 rgba(0, 0, 0, 0.22);
 }
-.tile-title { font-family: var(--display); font-size: 17px; line-height: 1.1; overflow-wrap: anywhere; }
-.tile-meta { color: var(--gold); font-weight: 700; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+.tile-title { font-family: var(--display); font-size: clamp(14px, 4.4vw, 17px); line-height: 1.1; overflow-wrap: anywhere; max-width: 100%; }
+.tile-meta { color: var(--gold); font-weight: 700; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; max-width: 100%; overflow-wrap: anywhere; }
 .bar { display: block; width: 100%; height: 6px; margin-top: auto; border-radius: var(--r-pill); background: var(--deep); overflow: hidden; }
 .bar i { display: block; height: 100%; background: var(--gold); border-radius: inherit; }
 .tile-btn.compact { min-height: 96px; padding: var(--space-3); }
@@ -296,7 +321,7 @@ button { font: inherit; color: inherit; }
   text-transform: uppercase;
   letter-spacing: 0.02em;
   overflow-wrap: normal;
-  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 .tile-btn.compact .swatch { width: 24px; height: 24px; border-radius: 7px; }
 .tile-btn.locked { background: var(--deep); box-shadow: none; }
@@ -675,7 +700,8 @@ button { font: inherit; color: inherit; }
   .brand-mark i { width: 16px; height: 16px; }
   .home-main { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: stretch; }
   .hero { justify-content: center; padding: var(--space-5); border-radius: 24px; background: rgba(255, 255, 255, 0.2); }
-  .hero-btn { min-height: 120px; font-size: 36px; }
+  .hero-btn { min-height: 120px; }
+  .hero-label { font-size: clamp(24px, 3.2vw, 36px); }
   .tile-grid.two { grid-template-columns: 1fr; }
   .tile-btn { min-height: 0; flex: 1; }
   .tile-grid.three .tile-btn { min-height: 120px; }
